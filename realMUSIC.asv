@@ -65,7 +65,7 @@ end
 %             w=(inv(Rxx(:,:,ff)+0.01*eye(MicNum))*a)/(a'*inv(Rxx(:,:,ff)+0.01*eye(MicNum))*a);
 %             angel_curve(deg)=angel_curve(deg)+abs(w*s(:,ff));
 %             angel_plant(ff,deg)=abs(w*s(:,ff));
-            angel_curve(deg)=angel_curve(deg)+abs(1/(a'*((P(:,:,ff)+0.00001*eye(2))*a)));
+            angel_curve(deg)=angel_curve(deg)+abs(1/(a'*((P(:,:,ff)+0.001*eye(2))*a)));
             angel_plant(ff,deg)=abs(1/(a'*((P(:,:,ff)+0.00001*eye(2))*a)));
         end
     end

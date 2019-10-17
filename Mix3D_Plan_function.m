@@ -11,6 +11,7 @@ cd([path '\audio_R'])
 [x2 fs]=audioread('male_16k_10s.wav');
 % [x3 fs]=audioread('4_speech_5s.wav');
 cd(path)
+% [x1 fs]=audioread('sin4000.wav');
 SorLen=fs*4;
 %Source=[x1(1:fs*4)];
 Source=[x1(1:fs*4),x2(1:fs*4)];
