@@ -19,26 +19,25 @@ cd(path)
 %%
 %white noise
 
-% w=wgn(1000,1,0);
-% load('p1.mat');
-% %s1=conv(m,w);
+w=wgn(1000,1,0);
+load('p1.mat');
+s1=conv(m,w);
 % s1=m;
-% %s1=s1/a;
-% load('p2.mat');
-% %s2=conv(m,w);
+%s1=s1/a;
+load('p2.mat');
+s2=conv(m,w);
 % s2=m;
-% %s2=s2/a;
-% s=[fft(s1);fft(s2)];
+%s2=s2/a;
+s=[fft(s1);fft(s2)];
 
 %%
 
-% 
-load('rp1.mat');
-s1=m;
-load('rp2.mat');
-s2=m;
-s=[fft(s1);fft(s2)];
-
+% % 
+% load('rp1.mat');
+% s1=m;
+% load('rp2.mat');
+% s2=m;
+% s=[fft(s1);fft(s2)];
 %%
 %windowing
 % NWIN=1024;
@@ -53,8 +52,6 @@ s=[fft(s1);fft(s2)];
 NFFT=length(s);
 df=fs/NFFT;
 Freqs=0:df:(NFFT/2-1)*df;
-
-
     angel_curve=zeros(1,360);
     angel_plant=zeros(length(Freqs),360);
     for deg=1:360
@@ -65,9 +62,13 @@ Freqs=0:df:(NFFT/2-1)*df;
             for MicNo=1:MicNum
                 a(MicNo,1)=exp(1i*k*kappa*MicPos(:,MicNo));
             end
+%             t=1:1/fs:length(Freqs);
+%             sinusoid=fft(sin(2*pi*Freqs(ff)*t));
             w=a';
             angel_curve(deg)=angel_curve(deg)+abs(w*s(:,ff));
             angel_plant(ff,deg)=abs(w*s(:,ff));
+%             angel_curve(deg)=angel_curve(deg)+abs(w*s(:,ff))*sinusoid(ff);
+%             angel_plant(ff,deg)=abs(w*s(:,ff)*sinusoid(ff));
         end
     end
    
