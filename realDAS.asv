@@ -19,25 +19,46 @@ cd(path)
 %%
 %white noise
 
-% w=wgn(1000,1,0);
-% load('p1.mat');
-% %s1=conv(m,w);
+w=wgn(1000,1,0);
+load('mp1.mat');
+%s1=conv(m,w);
+s1=m;
+s1=fft(s1);
+for i=1:length(s1)
+if abs(s1(i))>1
+    s1(i)=s1(i)/abs(s1(i));
+end
+if abs(s1(i))<0.5
+    s1(i)=s1(i)/abs(s1(i));
+end
+end
 % s1=m;
-% %s1=s1/a;
-% load('p2.mat');
-% %s2=conv(m,w);
+%s1=s1/a;
+load('mp2.mat');
+%s2=conv(m,w);
+s2=m;
+
+s2=fft(s2);
+for i=1:length(s2)
+if abs(s2(i))>1
+    s2(i)=s2(i)/abs(s2(i));
+end
+if abs(s2(i))<0.5
+    s2(i)=s2(i)/abs(s2(i));
+end
+end
 % s2=m;
-% %s2=s2/a;
-% s=[fft(s1);fft(s2)];
+%s2=s2/a;
+s=[s1;s2];
 
 %%
 
-% 
-load('rp1.mat');
-s1=m;
-load('rp2.mat');
-s2=m;
-s=[fft(s1);fft(s2)];
+% % 
+% load('rp1.mat');
+% s1=m;
+% load('rp2.mat');
+% s2=m;
+% s=[fft(s1);fft(s2)];
 %%
 %windowing
 % NWIN=1024;
@@ -62,10 +83,13 @@ Freqs=0:df:(NFFT/2-1)*df;
             for MicNo=1:MicNum
                 a(MicNo,1)=exp(1i*k*kappa*MicPos(:,MicNo));
             end
-            t=1:1/fs:length(Freqs)
+%             t=1:1/fs:length(Freqs);
+%             sinusoid=fft(sin(2*pi*Freqs(ff)*t));
             w=a';
             angel_curve(deg)=angel_curve(deg)+abs(w*s(:,ff));
             angel_plant(ff,deg)=abs(w*s(:,ff));
+%             angel_curve(deg)=angel_curve(deg)+abs(w*s(:,ff))*sinusoid(ff);
+%             angel_plant(ff,deg)=abs(w*s(:,ff)*sinusoid(ff));
         end
     end
    
@@ -89,5 +113,22 @@ Freqs=0:df:(NFFT/2-1)*df;
     pcolor(deg,Freqs,angel_plant);
 %     contourf(deg,Freqs,angel_plant);
     shading interp;
+    
+    %%
+  %sep part
+  [pks lo]=findpeak(angel_curve);
+  for ff=1:length(Freqs)
+       k = 2*pi*Freqs(ff)/c; 
+            kappa=[cosd(deg),sind(deg),0];
+            for MicNo=1:MicNum
+                a(MicNo,1)=exp(1i*k*kappa*MicPos(:,MicNo));
+            end
+%             t=1:1/fs:length(Freqs);
+%             sinusoid=fft(sin(2*pi*Freqs(ff)*t));
+            w=a';
+            angel_curve(deg)=angel_curve(deg)+abs(w*s(:,ff));
+            angel_plant(ff,deg)=abs(w*s(:,ff));
+  end
+    
     
 end

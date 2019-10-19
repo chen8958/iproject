@@ -47,4 +47,4 @@ angel=0:180:180;
 MicPos=(1/100)*1.5*[cosd(angel);sind(angel);zeros(1,length(angel))];
 
 
-SorPos=[180,90];
+SorPos=[90,90];

@@ -1,0 +1,12 @@
+cd(['.\audio_R'])
+[x1 fs]=audioread('female_16k_10s.wav');
+[x2 fs]=audioread('male_16k_10s.wav');
+SorLen=fs*4;
+Source=[x1(1:fs*4);x2(1:fs*4)];
+cd('..');
+
+load(sor135mic1.mat');
+s1=m;
+load('p2.mat');
+s2=m;
+
