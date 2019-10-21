@@ -4,7 +4,7 @@ function Sep_TIKR(beta,MicPos,SorPos)
     c=343.0;
     %kappa=[sind(SorPos(:,1)).*sind(SorPos(:,2)),cosd(SorPos(:,1)).*sind(SorPos(:,2)),cosd(SorPos(:,2))];
     %kappa = [cosd(SorPos(1))*sind(SorPos(2)) sind(SorPos(1))*sind(SorPos(2)) cosd(SorPos(2))];
-    kappa = [cosd(SorPos(:,1)).*sind(SorPos(:,2)) sind(SorPos(:,1)).*sind(SorPos(:,2)) cosd(SorPos(:,2))];
+    kappa = [cosd(SorPos(:,1)).*cosd(SorPos(:,2)) sind(SorPos(:,1)).*cosd(SorPos(:,2)) sind(SorPos(:,2))];
     [D MicNum]=size(MicPos);
     for i=1:MicNum
         [p_source(i,:) fs]=audioread("p"+i+".wav");

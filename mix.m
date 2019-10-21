@@ -21,9 +21,17 @@ sor135mic1=m;
 %%
 %45 female x1 135 male x2
 sor45mic0=conv(sor45mic0,x1);
+sor45mic0=sor45mic0/max(abs(sor45mic0));
+
 sor45mic1=conv(sor45mic1,x1);
+sor45mic1=sor45mic1/max(abs(sor45mic1));
+
 sor135mic0=conv(sor135mic0,x2);
+sor135mic0=sor135mic0/max(abs(sor135mic0));
+
 sor135mic1=conv(sor135mic1,x2);
+sor135mic1=sor135mic1/max(abs(sor135mic1));
+
 
 m=sor45mic0+sor135mic0;
 m=m';

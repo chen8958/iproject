@@ -3,7 +3,7 @@ function Sep_MPDR(SorNum,MicPos,SorPos)
     c=343.0;
     %kappa=[sind(SorPos(:,1)).*sind(SorPos(:,2)),cosd(SorPos(:,1)).*sind(SorPos(:,2)),cosd(SorPos(:,2))];
     %kappa = [cosd(SorPos(1))*sind(SorPos(2)) sind(SorPos(1))*sind(SorPos(2)) cosd(SorPos(2))];
-    kappa = [cosd(SorPos(:,1)).*sind(SorPos(:,2)) sind(SorPos(:,1)).*sind(SorPos(:,2)) cosd(SorPos(:,2))];
+    kappa = [cosd(SorPos(:,1)).*cosd(SorPos(:,2)) sind(SorPos(:,1)).*cosd(SorPos(:,2)) sind(SorPos(:,2))];
     [D MicNum]=size(MicPos);
     for i=1:MicNum
         [p_source(i,:) fs]=audioread("p"+i+".wav");
@@ -77,8 +77,10 @@ end
                  A(m,ss) =exp(1j*k*kappa(ss,:)*MicPos(:,m));
 
             end
-                 w(:,ss)=(inv(Rxx(:,:,ff))*A(:,ss))/(A(:,ss)'*inv(Rxx(:,:,ff))*A(:,ss));
-                 Source_half(ss,ff,FrameNo)=(w(:,ss)'*P_half(:,ff,FrameNo))/SorNum;
+                 %w=(inv(Rxx(:,:,ff)+0.001*eye(size(A,1)))*A(:,ss))/(A(:,ss)'*inv(Rxx(:,:,ff)+0.001*eye(size(A,1)))*A(:,ss));
+                 w=inv(Rxx(:,:,ff)+0.01*eye(MicNum))*A(:,ss)/(A(:,ss)'*inv(Rxx(:,:,ff)+0.01*eye(MicNum))*A(:,ss));
+                 Source_half(ss,ff,FrameNo)=(w'*P_half(:,ff,FrameNo));
+%                     Source_half(ss,ff,FrameNo)=(A(:,ss)'*P_half(:,ff,FrameNo))/SorNum;
             end
         end
         for ss = 1:SorNum

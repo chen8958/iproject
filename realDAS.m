@@ -113,6 +113,7 @@ Freqs=0:df:(NFFT/2-1)*df;
   %sep part
   [pks lo]=findpeaks(angel_curve);
   lo
+  %lo=[15,165];
   s_all=[fft(s1);fft(s2)];
   
   NFFT=length(s_all);
@@ -121,21 +122,40 @@ Freqs=0:df:(NFFT/2-1)*df;
   %%
   %set source number
   SorNum=2;
-  for ss=1:SorNum
-      kappa=[cosd(lo(ss)),sind(lo(ss)),0];
+%   for ss=1:SorNum
+%       kappa=[cosd(lo(ss)),sind(lo(ss)),0];
+%       for ff=1:length(Freqs)
+%           k = 2*pi*Freqs(ff)/c;
+%           for MicNo=1:MicNum
+%               a(MicNo,1)=exp(1i*k*kappa*MicPos(:,MicNo));
+%           end
+% %           w=a';
+% %           w=inv(a'*a+0.001*eye(2))*a';
+%           w=a'/(a'*a+0.001);
+%           y_half(ss,ff)=w*s_all(:,ff);
+%       end
+%       y(ss,:)=[y_half(ss,:),zeros(1,1),fliplr(conj(y_half(ss,2:end)))];
+%   end
+      
+    
       for ff=1:length(Freqs)
           k = 2*pi*Freqs(ff)/c;
+          for ss=1:SorNum
+              kappa=[cosd(lo(ss)),sind(lo(ss)),0];
           for MicNo=1:MicNum
-              a(MicNo,1)=exp(1i*k*kappa*MicPos(:,MicNo));
+              a(MicNo,ss)=exp(1i*k*kappa*MicPos(:,MicNo));
+          end
           end
 %           w=a';
 %           w=inv(a'*a+0.001*eye(2))*a';
-          w=a'/(a'*a+0.001);
-          y_half(ss,ff)=w*s_all(:,ff);
+          w=inv(a'*a+0.001*eye(2))*a';
+          y_half(:,ff)=w*s_all(:,ff);
       end
+      for ss=1:SorNum
       y(ss,:)=[y_half(ss,:),zeros(1,1),fliplr(conj(y_half(ss,2:end)))];
-  end
-      
+      end
+  
+  
   for ss = 1:SorNum
       y(ss,:)=ifft(y(ss,:));
       audiowrite(['realTIKR_sep' num2str(MicNum) num2str(ss) '.wav'],y(ss,:)/max(abs(y(ss,:))),fs);

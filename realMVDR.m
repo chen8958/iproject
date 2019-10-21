@@ -1,4 +1,4 @@
-function [angel_plant]=realMPDR(MicPos)
+function [angel_curve]=realMVDR(MicPos)
 c=343;
 path=cd;
 
@@ -6,12 +6,6 @@ path=cd;
 % 
 % 
 [D MicNum]=size(MicPos);
-    %% Windowing
-% cd([path '\audio_R'])
-% [x1 fs]=audioread('female_16k_10s.wav');
-% SorLen=fs*4;
-% Source=[x1(1:fs*4)];
-% cd(path)
 fs=16000;
 %%
 % [s1 fs]=audioread('p1.wav');
@@ -26,49 +20,47 @@ fs=16000;
 % s=[fft(s1);fft(s2)];
 
 %%
-w=wgn(1000,1,0);
-load('p1.mat');
-%s1=conv(m,w);
-s1=m;
-s1=fft(s1);
-for i=1:length(s1)
-if abs(s1(i))>1
-    s1(i)=s1(i)/abs(s1(i));
-end
-if abs(s1(i))<0.5
-    s1(i)=s1(i)/abs(s1(i));
-end
-end
-% s1=m;
-%s1=s1/a;
-load('p2.mat');
-%s2=conv(m,w);
-s2=m;
 
-s2=fft(s2);
-for i=1:length(s2)
-if abs(s2(i))>1
-    s2(i)=s2(i)/abs(s2(i));
-end
-if abs(s2(i))<0.5
-    s2(i)=s2(i)/abs(s2(i));
-end
-end
+% load('p1.mat');
+% %s1=conv(m,w);
+% s1=m;
+% s1=fft(s1);
+% for i=1:length(s1)
+% if abs(s1(i))>1
+%     s1(i)=s1(i)/abs(s1(i));
+% end
+% if abs(s1(i))<0.5
+%     s1(i)=s1(i)/abs(s1(i));
+% end
+% end
+% % s1=m;
+% %s1=s1/a;
+% load('p2.mat');
+% %s2=conv(m,w);
 % s2=m;
-%s2=s2/a;
-s=[s1;s2];
+% 
+% s2=fft(s2);
+% for i=1:length(s2)
+% if abs(s2(i))>1
+%     s2(i)=s2(i)/abs(s2(i));
+% end
+% if abs(s2(i))<0.5
+%     s2(i)=s2(i)/abs(s2(i));
+% end
+% end
+% % s2=m;
+% %s2=s2/a;
+% s=[s1;s2];
+
 %%
-%windowing
-% NWIN=1024;
-% hopsize=NWIN/2;                                                            % 50% overlap
-% NumOfFrame=2*floor(fs*4/NWIN)-1;                                           % number of frames
-% win = hann(NWIN+1);                                                        % hanning window
-% win = win(1:end-1).';
-% %% FFT
-% NFFT=2^nextpow2(NWIN);
-% df=fs/NFFT;
-% Freqs=0:df:(NFFT/2-1)*df;
-NFFT=length(s);
+load('mp1.mat');
+s1=m;
+load('mp2.mat');
+s2=m;
+s=[fft(s1);fft(s2)];
+%%
+
+NFFT=length(s1);
 df=fs/NFFT;
 Freqs=0:df:(NFFT/2-1)*df;
 Rxx=zeros(MicNum,MicNum,length(Freqs));
@@ -108,6 +100,14 @@ Rxx=Rxx+Rxx_tmp;
     
     %%
   %set source number
+  [pks lo]=findpeaks(angel_curve);
+  lo=[15,165];
+  s_all=[fft(s1);fft(s2)];
+  
+  NFFT=length(s_all);
+  df=fs/NFFT;
+  Freqs=0:df:(NFFT/2-1)*df;
+  
   SorNum=2;
   for ss=1:SorNum
       kappa=[cosd(lo(ss)),sind(lo(ss)),0];
@@ -117,7 +117,7 @@ Rxx=Rxx+Rxx_tmp;
               a(MicNo,1)=exp(1i*k*kappa*MicPos(:,MicNo));
           end
           w=inv(Rxx(:,:,ff)+0.01*eye(MicNum))*a/(a'*inv(Rxx(:,:,ff)+0.01*eye(MicNum))*a);
-          y_half(ss,ff)=w*s_all(:,ff);
+          y_half(ss,ff)=w'*s_all(:,ff);
       end
       y(ss,:)=[y_half(ss,:),zeros(1,1),fliplr(conj(y_half(ss,2:end)))];
   end

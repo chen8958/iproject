@@ -13,7 +13,7 @@ clear all
 % MicPos=(1/100)*4.5*[cosd(angel);sind(angel);zeros(1,length(angel))]
 
 %%
-
+% 
 % angel=0:45:315;
 % MicPos=(1/100)*2.6*[cosd(angel);sind(angel);zeros(1,length(angel))]
 
@@ -42,9 +42,9 @@ clear all
 % MicPos=[MicPos,MicPos2,MicPos3,MicPos4];
 
 %%
-%ula 3cm
+% %ula 3cm
 angel=0:180:180;
 MicPos=(1/100)*1.5*[cosd(angel);sind(angel);zeros(1,length(angel))];
 
 
-SorPos=[90,90];
+SorPos=[15,0;135,0];
