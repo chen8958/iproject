@@ -8,7 +8,6 @@ function Sep_DAS(SorNum,MicPos,SorPos)
     for i=1:MicNum
         [p_source(i,:) fs]=audioread("p"+i+".wav");
     end
-    
      %% Windowing
     NWIN=1024;
     hopsize=NWIN/2;                                                            % 50% overlap
@@ -33,7 +32,6 @@ function Sep_DAS(SorNum,MicPos,SorPos)
         % --time segment--
         t_start=(FrameNo-1)*hopsize;
         tt=(t_start+1):(t_start+NWIN);
-
         % --propagation--
         for ff=1:length(Freqs)
             k = 2*pi*Freqs(ff)/c;                                              
@@ -50,7 +48,6 @@ function Sep_DAS(SorNum,MicPos,SorPos)
         for ss = 1:SorNum
             P(ss,:)=[Source_half(ss,:,FrameNo),zeros(1,1),fliplr(conj(Source_half(ss,2:end,FrameNo)))];
             p_part(ss,:)=(ifft(P(ss,:),NFFT));
-
             % --overlap and add--
             tt2 = 1:NWIN;
             p(ss,t_start+tt2)=p(ss,t_start+tt2)+p_part(ss,tt2);
